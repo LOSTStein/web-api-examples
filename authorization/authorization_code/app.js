@@ -14,8 +14,8 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = 'yourClientIDGoesHere'; // your clientId
-var client_secret = 'YourSecretIDGoesHere'; // Your secret
+var client_id = '68f2c316cc1d4d2ab67718cf1131161b'; // your clientId
+var client_secret = '3a9d79c6c9964209965afa7fb3f4d656'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 
@@ -40,7 +40,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-read-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -99,13 +99,13 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        res.redirect('https://localhost:3000/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect('/#' +
+        res.redirect('https://localhost:3000/#' +
           querystring.stringify({
             error: 'invalid_token'
           }));
