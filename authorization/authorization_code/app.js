@@ -18,7 +18,6 @@ var client_id = '68f2c316cc1d4d2ab67718cf1131161b'; // your clientId
 var client_secret = '3a9d79c6c9964209965afa7fb3f4d656'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-
 const generateRandomString = (length) => {
   return crypto
   .randomBytes(60)
@@ -40,7 +39,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-read-playback-state';
+  var scope = 'user-read-private user-read-email user-read-playback-state streaming user-modify-playback-state playlist-read-private playlist-read-collaborative';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -61,7 +60,7 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect('/#' +
+    res.redirect('http://localhost:3000/#' +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -99,13 +98,13 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('https://localhost:3000/#' +
+        res.redirect('http://localhost:3000/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect('https://localhost:3000/#' +
+        res.redirect('http://localhost:3000/#' +
           querystring.stringify({
             error: 'invalid_token'
           }));
@@ -142,5 +141,6 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+// Create HTTPS server
 console.log('Listening on 8888');
 app.listen(8888);
